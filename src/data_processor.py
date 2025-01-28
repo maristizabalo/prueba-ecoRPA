@@ -24,7 +24,7 @@ class DataProcessor:
             raise ValueError(f"Error al cargar los datos: {e}")
         
     def extract_relevant_data(self):
-        print(self.df_original)
+        # print(self.df_original)
         # columnas relevantes
         relevant_columns = ["Nombre producto", "Marca", "Precio Reportado ", "Cantidades vendidas "]
 
@@ -39,7 +39,7 @@ class DataProcessor:
     def get_top_10_products(self):
         print("obteniendo el top de 10 productos mas vendidos")
         top_10 = self.df_clean.nlargest(10, "Cantidades vendidas ").copy()
-        print("top 10 obtenido", top_10)
+        # print("top 10 obtenido", top_10)
         return top_10
 
     def generate_new_file(self, top_10):
@@ -56,7 +56,6 @@ class DataProcessor:
             "Precio Reportado ": "Precio"
         }
         top_10.rename(columns=new_column_names, inplace=True)
-        print("Nombres de columnas actualizados:", top_10.columns.tolist())
     
         # calcular total de precios
         total_price = top_10["Precio"].sum()
@@ -80,4 +79,40 @@ class DataProcessor:
     
         print(f"Archivo generado exitosamente en: {output_path}")
 
+    def calculate_summary(self):
+        print("...calculando resumen de información...")
+
+        # calcular toal de productos vendidos y total de los 10 productos más vendidos con porcentaje del 
+        total_products = self.df_original["Cantidades vendidas "].sum()
+        top_10 = self.get_top_10_products()
+        top_10_total = top_10["Cantidades vendidas "].sum()
+        percentage = (top_10_total / total_products) * 100 if total_products > 0 else 0
+
+        # creamos el resumen en un diccionario
+        summary = {
+            "Total productos vendidos": total_products,
+            "Total 10 productos más vendidos": top_10_total,
+            "Porcentaje del total": percentage
+        }
+
+        # Ccrear el dataframe de resumen
+        summary_df = pd.DataFrame([{
+            "Descripción": "Total productos vendidos",
+            "Valor": total_products
+        }, {
+            "Descripción": "Total 10 productos más vendidos",
+            "Valor": top_10_total
+        }, {
+            "Descripción": "Porcentaje del total",
+            "Valor": f"{percentage:.2f}%"
+        }])
+
+        # pasar el dataframe de resumen en un archivo CSV
+        output_path = os.path.join(self.output_dir, "resumen.csv")
+        summary_df.to_csv(output_path, sep=";", index=False, header=True)
+
+        print(f"Archivo de resumen generado exitosamente en: {output_path}")
+
+        # devlvemos el resumen como un diccionario
+        return summary
     
