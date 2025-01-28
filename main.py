@@ -13,7 +13,7 @@ OUTPUT_DIR = "output"
 # Configuración del correo
 EMAIL_SENDER = "pruebamaicolecorpa@gmail.com"
 PASSWORD = "qtis svuw yzsz vycv"
-EMAIL_RECEIVER = "maristizabalo95@gmail.com"
+EMAIL_RECEIVER = "luzobando2114@gmail.com"
 SMTP_SERVER = "smtp.gmail.com"
 PORT = 587
 
@@ -77,7 +77,7 @@ def main():
     email_sender = EmailSender(SMTP_SERVER, PORT, EMAIL_SENDER, PASSWORD)
     email_sender.send_email(
         recipient_email=EMAIL_RECEIVER,
-        subject="Resumen de Ventas - Top 10 Productos",
+        subject="Prueba python Maicol Aristizabal",
         body=body,
         attachment_paths=attachments
     )
