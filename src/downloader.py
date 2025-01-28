@@ -54,5 +54,5 @@ class Downloader:
         
         with open(file_path, "wb") as file:
             file.write(response.content)
-        print("descargado correctamente")
+        print("descargado correctamente desde la clase")
         return file_path

@@ -161,4 +161,4 @@ cython_debug/
 
 #carpetas del proyecto
 downloads/
-outputs/
+output/
