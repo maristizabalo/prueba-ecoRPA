@@ -1,29 +1,26 @@
-import requests
-from bs4 import BeautifulSoup
-import os
+from src.downloader import Downloader
 
-# variables iniciales para url y folder de descargas
+# Configuración inicial
 BASE_URL = "https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/precios-de-venta-al-publico-de-articulos-de-primera-necesidad-pvpapn"
+TITLE = "Precios de los productos de primera necesidad para los colombianos en tiempos del COVID-19"
+DOWNLOAD_KEYWORD = "Anexo referencias mas vendidas"
 DOWNLOAD_DIR = "downloads"
 
-# creamos la carpeta de descargas si no existe
-os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-
-#funcion encargada de descargar el contenido de la pagina
-def fetch_page(url):
-    print("descargando pagina")
-    response = requests.get(url)
-    response.raise_for_status()
-    print("todo en orden")
-    return response.text
 
 def main():
-    print("inicio de proyecto")
-    print(f"URL base: {BASE_URL}")
+    print("inciiando... y descargando archivo")
     
-    # Descargar la página
-    html_content = fetch_page(BASE_URL)
-    print("HTML descargado", html_content)
+    # instancia del descargador
+    downloader = Downloader(BASE_URL, DOWNLOAD_DIR)
+    html_content = downloader.fetch_page()
+    # print(f"pagina obtenida -------------------------- {html_content} --------------------------")
+
+    # obtener href del archivo
+    file_url = downloader.find_table_and_link(html_content, TITLE, DOWNLOAD_KEYWORD)
+
+    # descargar el archivo en la carpeta de descargas
+    file_path = downloader.download_file(file_url)
+    print(f"Proceso completado. Archivo descargado en: {file_path}")
 
 if __name__ == "__main__":
     main()
